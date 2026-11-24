@@ -8,22 +8,19 @@ Kontrak yang harus dipertahankan:
     predict_image(image: PIL.Image.Image) -> Prediction
     Prediction.label      : "dr" atau "no_dr"
     Prediction.confidence : float 0..1
-
-Yang perlu diisi (cari TODO):
-    1. MODEL_PATH dan CLASS_NAMES.
-    2. load_model(): bangun arsitektur, muat bobot .pth, lalu model.eval().
-    3. preprocess(): HARUS identik dengan transformasi saat pelatihan
-       (ukuran, normalisasi mean/std, urutan channel).
-Selama belum diisi, tombol Analisis menampilkan pesan "Analisis gagal"
-dan detail error tercetak di terminal.
 """
 from dataclasses import dataclass
 
+import cv2
+import numpy as np
 import streamlit as st
+import torch
+import torch.nn as nn
 from PIL import Image
+from torchvision import models, transforms
 
 MODEL_PATH = "models/resnet18_dr_model.pth"   # letakkan file .pth di folder models/
-CLASS_NAMES = ["no_dr", "dr"]         # TODO: urutan indeks kelas sama dengan saat pelatihan
+CLASS_NAMES = ["dr", "no_dr"]                 # Indeks 0 = "dr", Indeks 1 = "no_dr" (sesuai pelatihan)
 
 
 @dataclass
@@ -32,26 +29,67 @@ class Prediction:
     confidence: float
 
 
+def crop_retina(img: np.ndarray, tol: int = 7) -> np.ndarray:
+    """Memotong area hitam secara presisi di 4 sisi (identik dengan Colab)."""
+    if img.ndim == 2:
+        mask = img > tol
+        return img[np.ix_(mask.any(1), mask.any(0))]
+    elif img.ndim == 3:
+        gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        mask = gray_img > tol
+        check_any = mask.any(axis=1)
+        if not check_any.any():
+            return img
+        return img[np.ix_(mask.any(1), mask.any(0), [True, True, True])]
+    return img
+
+
 @st.cache_resource                    # model dimuat sekali, bukan setiap analisis
 def load_model():
-    # TODO: contoh alurnya (ResNet-18)
-    #   model = torchvision.models.resnet18()
-    #   model.fc = torch.nn.Linear(model.fc.in_features, <jumlah kelas sesuai pelatihan>)
-    #   model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))
-    #   model.eval()
-    #   return model
-    raise NotImplementedError("load_model() belum diisi")
+    model = models.resnet18(weights=None)
+    model.fc = nn.Linear(model.fc.in_features, 2)
+    model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu", weights_only=True))
+    model.eval()
+    return model
 
 
 def preprocess(image: Image.Image):
-    # TODO: ubah PIL.Image menjadi tensor dengan transformasi yang sama seperti pelatihan
-    raise NotImplementedError("preprocess() belum diisi")
+    # 1. Konversi PIL.Image ke array RGB
+    img_rgb = np.array(image.convert("RGB"))
+
+    # 2. Auto-Cropping area hitam
+    img_cropped = crop_retina(img_rgb, tol=7)
+
+    # 3. CLAHE pada kanal L (LAB Color Space)
+    lab = cv2.cvtColor(img_cropped, cv2.COLOR_RGB2LAB)
+    l, a, b = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8, 8))
+    cl = clahe.apply(l)
+    limg = cv2.merge((cl, a, b))
+    enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2RGB)
+
+    # 4. Resize ke 224x224
+    resized_img = cv2.resize(enhanced_img, (224, 224), interpolation=cv2.INTER_AREA)
+
+    # 5. Konversi ke Tensor & Normalisasi ImageNet
+    transform_tensor = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+
+    pil_processed = Image.fromarray(resized_img)
+    return transform_tensor(pil_processed).unsqueeze(0)
 
 
 def predict_image(image: Image.Image) -> Prediction:
     model = load_model()
     x = preprocess(image)
-    # TODO: jalankan model dengan torch.no_grad(); softmax jika keluarannya 2 kelas
-    #       (sigmoid + ambang batas jika hanya 1 keluaran), lalu ambil kelas dan probabilitasnya
-    #   label = CLASS_NAMES[idx]; confidence = float(prob[idx])
-    raise NotImplementedError("predict_image() belum diisi")
+
+    with torch.no_grad():
+        outputs = model(x)
+        prob = torch.softmax(outputs, dim=1)[0]
+        idx = int(torch.argmax(prob).item())
+
+    label = CLASS_NAMES[idx]
+    confidence = float(prob[idx])
+    return Prediction(label=label, confidence=confidence)
