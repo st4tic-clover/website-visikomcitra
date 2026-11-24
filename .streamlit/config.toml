@@ -1,0 +1,13 @@
+[theme]
+base = "light"
+primaryColor = "#0f8fa8"
+backgroundColor = "#f3f8fb"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#16313f"
+
+[server]
+maxUploadSize = 10   # MB, selaras dengan teks panduan di content.py
+
+[client]
+toolbarMode = "minimal"
+showSidebarNavigation = false
