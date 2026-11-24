@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#f3f8fb;--surface:#fff;--text:#16313f;--muted:#5a7380;--line:#dbe7ee;
+  --primary:#0f8fa8;--primary-d:#0b6f84;--soft:#e3f4f8;
+  --ok:#0f9d7a;--ok-soft:#e1f6ef;--warn:#b86e00;--warn-soft:#fff3dc;
+  --shadow:0 4px 20px rgba(15,70,90,.08);--shadow-lg:0 14px 34px rgba(15,70,90,.15);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---------- Dasar & font ---------- */
+.stApp{background:radial-gradient(1100px 520px at 50% -8%,#d9eff5 0%,var(--bg) 62%)}
+.stApp,.stApp p,.stApp li,.stApp label,.stApp button,.stApp small,.stApp [data-testid="stMarkdownContainer"],
+.stApp [data-testid="stFileUploaderDropzoneInstructions"]{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.rc-serif{font-family:'Fraunces',Georgia,serif!important;font-weight:600;letter-spacing:-.015em;color:var(--text);line-height:1.2}
+[data-testid="stMainBlockContainer"]{max-width:1040px;padding-top:1rem;padding-bottom:3rem}
+#MainMenu,footer,[data-testid="stSidebar"],[data-testid="stSidebarCollapsedControl"]{display:none!important}
+[data-testid="stHeader"]{background:transparent}
+.rc-muted{color:var(--muted)}.rc-center{text-align:center}.rc-small{font-size:.88rem}
+.rc-gap{margin-top:1.1rem}
+
+/* ---------- Animasi ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pop{0%{opacity:0;transform:scale(.7)}60%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.fade-up,.st-key-preview,.st-key-card,.st-key-loadcard{animation:fadeUp .7s var(--ease) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
+
+/* ---------- Header ---------- */
+.st-key-topbar{padding:.4rem 0 .8rem}
+.rc-brand{display:flex;align-items:center;gap:.6rem;font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.25rem;color:var(--text)}
+.rc-logo{width:34px;height:34px;border-radius:11px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:1rem}
+[data-testid="stPageLink-NavLink"]{border-radius:999px;justify-content:center;font-weight:600;color:var(--muted);transition:background .25s var(--ease),color .25s}
+[data-testid="stPageLink-NavLink"]:hover{background:var(--soft);color:var(--primary-d)}
+[data-testid="stPageLink-NavLink"][aria-current="page"]{background:var(--soft);color:var(--primary-d)}
+
+/* ---------- Hero ---------- */
+.rc-hero{text-align:center;padding:3.2rem 0 1.6rem}
+.rc-hero h1{font-size:clamp(2.1rem,5.4vw,3.4rem);margin:.5rem auto 1rem;max-width:760px}
+.rc-lead{font-size:1.15rem;color:var(--muted);max-width:600px;margin:0 auto 1.2rem}
+.rc-pill{display:inline-block;background:var(--soft);color:var(--primary-d);font-weight:700;font-size:.82rem;padding:.4rem .95rem;border-radius:999px}
+.rc-sec{font-size:clamp(1.5rem,3.4vw,2rem);margin:3.2rem 0 1.4rem}
+.rc-pagehead{text-align:center;padding:1.6rem 0 .4rem}
+.rc-pagehead h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 .3rem}
+
+/* ---------- Kartu ---------- */
+.rc-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.rc-card,.st-key-card,.st-key-loadcard{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:1.6rem}
+.rc-card{transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.rc-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.rc-card h3{font-size:1.2rem;margin:0 0 .4rem}.rc-card p{margin:0 0 .8rem}
+.rc-num{width:42px;height:42px;border-radius:50%;background:var(--soft);color:var(--primary-d);font-weight:700;display:grid;place-items:center;margin-bottom:.9rem}
+.rc-edu{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem}
+.rc-edu ul,.rc-next,.rc-guide ul{margin:.3rem 0 0;padding-left:1.2rem}
+.rc-edu li,.rc-next li,.rc-guide li{margin-bottom:.4rem}
+@media (max-width:720px){.rc-edu{grid-template-columns:1fr}}
+.rc-disclaimer{background:var(--warn-soft);border:1px solid var(--warn);border-radius:16px;padding:1rem 1.3rem;font-size:.94rem;color:var(--text)}
+.rc-disclaimer strong{color:var(--warn)}
+.rc-footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:2.4rem}
+
+/* ---------- Tombol ---------- */
+.stButton button{min-height:3.2rem;border-radius:14px;font-weight:700;font-size:1.02rem;
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.stButton button:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stButton button:active{transform:scale(.97)}
+.stButton button[data-testid="stBaseButton-primary"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.stButton button[data-testid="stBaseButton-primary"]:hover{background:var(--primary-d);border-color:var(--primary-d)}
+.stButton button[data-testid="stBaseButton-secondary"]{background:transparent;border:2px solid var(--line);color:var(--primary-d)}
+
+/* ---------- Langkah ---------- */
+.rc-steps{display:flex;justify-content:center;gap:.5rem;list-style:none;padding:0;margin:1rem 0 1.6rem;flex-wrap:wrap}
+.rc-steps li{display:flex;align-items:center;gap:.5rem;padding:.3rem .95rem .3rem .3rem;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-weight:600;font-size:.9rem;transition:all .4s var(--ease)}
+.rc-steps li span{width:26px;height:26px;border-radius:50%;background:var(--line);color:var(--text);display:grid;place-items:center;font-size:.78rem;transition:all .4s var(--ease)}
+.rc-steps li.active{border-color:var(--primary);color:var(--primary-d);transform:scale(1.05)}
+.rc-steps li.active span,.rc-steps li.done span{background:var(--primary);color:#fff}
+.rc-steps li.done{color:var(--text)}
+
+/* ---------- Unggah ---------- */
+.rc-guide{background:var(--soft);border-radius:16px;padding:1rem 1.3rem;margin-bottom:1.1rem;font-size:.96rem}
+[data-testid="stFileUploaderDropzone"]{border:2.5px dashed var(--line);border-radius:20px;background:var(--bg);padding:2.4rem 1rem;
+  transition:border-color .3s var(--ease),background .3s var(--ease),transform .3s var(--ease)}
+[data-testid="stFileUploaderDropzone"]:hover{border-color:var(--primary);background:var(--soft);transform:scale(1.012)}
+/* Teks uploader bawaan Streamlit berbahasa Inggris. Diganti lewat CSS; bila tidak berubah di versi Anda, aman diabaikan. */
+[data-testid="stFileUploaderDropzoneInstructions"] span{font-size:0}
+[data-testid="stFileUploaderDropzoneInstructions"] span:first-child::before{content:"Seret gambar ke sini";font-size:1.05rem;font-weight:700;color:var(--text)}
+[data-testid="stFileUploaderDropzoneInstructions"] small{font-size:0}
+[data-testid="stFileUploaderDropzoneInstructions"] small::before{content:"JPG, JPEG, PNG · maks. 10 MB";font-size:.85rem}
+[data-testid="stFileUploaderDropzone"] button[data-testid="stBaseButton-secondary"]{font-size:0;white-space:nowrap;min-width:7.5rem}
+[data-testid="stFileUploaderDropzone"] button[data-testid="stBaseButton-secondary"]::after{content:"Pilih file";font-size:.95rem;font-weight:700;white-space:nowrap}
+[data-testid="stImage"] img{border-radius:16px;border:1px solid var(--line);max-height:380px;object-fit:contain;margin:0 auto;background:#0b1418}
+
+/* ---------- Loading ---------- */
+.rc-loading{text-align:center;padding:3rem 1rem}
+.rc-loading h2{font-size:1.5rem;margin:0 0 .3rem}
+.rc-loading p{animation:pulse 1.6s ease-in-out infinite}
+.rc-spin{width:58px;height:58px;border-radius:50%;border:6px solid var(--soft);border-top-color:var(--primary);margin:0 auto 1.3rem;animation:spin .9s linear infinite}
+
+/* ---------- Hasil ---------- */
+.rc-badge{display:inline-block;padding:.45rem 1.1rem;border-radius:999px;font-weight:700;margin-bottom:.8rem;animation:pop .6s .25s var(--ease) both}
+.rc-badge.ok{background:var(--ok-soft);color:var(--ok)}.rc-badge.warn{background:var(--warn-soft);color:var(--warn)}
+.rc-restitle{font-size:1.6rem;margin:0 0 1rem}
+.rc-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin:.4rem 0 .3rem}
+.rc-meter i{display:block;height:100%;background:var(--primary);border-radius:99px;transform-origin:left;animation:grow 1.2s .4s var(--ease) both}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .rc-spin{animation-duration:3s!important}
+}
